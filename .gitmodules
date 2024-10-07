@@ -1,0 +1,3 @@
+[submodule "Nostalgia/vendor/glfw"]
+	path = Nostalgia/vendor/glfw
+	url = https://github.com/kstzl/glfw
