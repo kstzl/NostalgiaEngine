@@ -22,4 +22,6 @@ add_subdirectory(vendor/glad)
 target_link_libraries(Nostalgia glfw)
 target_link_libraries(Nostalgia Glad)
 
+target_include_directories(Nostalgia PUBLIC "vendor/glm")
+
 add_compile_definitions(NOSTALGIA_BUILD_DLL)

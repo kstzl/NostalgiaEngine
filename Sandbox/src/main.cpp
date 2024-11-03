@@ -2,50 +2,52 @@
 #include <filesystem>
 #include <memory>
 
-#include <Nostalgia/Application/Application.hpp>
-#include <Nostalgia/Shader/ShaderProgram.hpp>
-#include <Nostalgia/VertexBufferObject.hpp>
-#include <Nostalgia/VertexArrayObject.hpp>
+#include <Nostalgia/application/CApplication.hpp>
+#include <Nostalgia/shader/CShaderProgram.hpp>
+#include <Nostalgia/CVertexBufferObject.hpp>
+#include <Nostalgia/CVertexArrayObject.hpp>
+#include <Nostalgia/CVertex.hpp>
+#include <Nostalgia/mesh/CMesh.hpp>
 
-class SandboxApp : public nostalgia::Application
+class CSandboxApp : public nostalgia::CApplication
 {
 public:
-    SandboxApp()
-        : nostalgia::Application(800, 600, "Nostalgia Sandbox App")
+    CSandboxApp()
+        : nostalgia::CApplication(800, 600, "Nostalgia Sandbox App")
     {
     }
 
     void init() override
     {
-        const float triangleVertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+        m_shader = std::make_unique<nostalgia::CShaderProgram>("assets/frag.glsl", "assets/vert.glsl");
+        m_shader->use();
 
-        m_triangleVao = std::make_unique<nostalgia::VertexArrayObject>();
-        m_triangleVao->bind();
+        std::vector<nostalgia::CVertex> triangleVertices = {
+            nostalgia::CVertex(glm::vec3(-0.5f, -0.5f, 0.0)),
+            nostalgia::CVertex(glm::vec3(0.5f, -0.5f, 0.0f)),
+            nostalgia::CVertex(glm::vec3(0.0f, 0.5f, 0.0f)),
+        };
 
-        m_triangleVbo = std::make_unique<nostalgia::VertexBufferObject>(triangleVertices, sizeof(triangleVertices));
-        m_triangleVbo->bind();
-        m_triangleVao->bindAttribute(0, 3, GL_FLOAT, 3 * sizeof(float), nullptr);
+        m_mesh = std::make_unique<nostalgia::CMesh>(triangleVertices);
+        m_mesh->bind();
     }
 
     void render() override
     {
-        assert(m_triangleVbo);
-        assert(m_triangleVao);
+        assert(m_mesh);
+
+        m_mesh->render();
     }
 
 private:
-    std::unique_ptr<nostalgia::VertexBufferObject> m_triangleVbo;
-    std::unique_ptr<nostalgia::VertexArrayObject> m_triangleVao;
+    std::unique_ptr<nostalgia::CShaderProgram> m_shader;
+    std::unique_ptr<nostalgia::CMesh> m_mesh;
 };
 
 int main()
 {
-    SandboxApp app;
+    CSandboxApp app;
 
     app.initialize();
-
-    nostalgia::ShaderProgram shaderProgram("assets/frag.glsl", "assets/vert.glsl");
-    shaderProgram.use();
-
     app.mainLoop();
 }
