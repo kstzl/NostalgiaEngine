@@ -8,6 +8,7 @@
 #include <Nostalgia/CVertexArrayObject.hpp>
 #include <Nostalgia/CVertex.hpp>
 #include <Nostalgia/mesh/CMesh.hpp>
+#include <Nostalgia/CCamera.hpp>
 
 class CSandboxApp : public nostalgia::CApplication
 {
@@ -19,6 +20,8 @@ public:
 
     void init() override
     {
+        m_camera = std::make_unique<nostalgia::CCamera>(glm::vec3(0.0f, 0.0f, 3.0f), 45.f, getAspectRatio(), 0.1f, 100.f);
+
         m_shader = std::make_unique<nostalgia::CShaderProgram>("assets/frag.glsl", "assets/vert.glsl");
         m_shader->use();
 
@@ -36,10 +39,12 @@ public:
     {
         assert(m_mesh);
 
+        m_shader->setMVP(m_camera->getViewMatrix(), m_camera->getProjectionMatrix());
         m_mesh->render();
     }
 
 private:
+    std::unique_ptr<nostalgia::CCamera> m_camera;
     std::unique_ptr<nostalgia::CShaderProgram> m_shader;
     std::unique_ptr<nostalgia::CMesh> m_mesh;
 };

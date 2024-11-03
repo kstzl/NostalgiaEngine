@@ -26,6 +26,11 @@ public:
     NOSTALGIA_API void initialize();
     NOSTALGIA_API void mainLoop();
 
+    NOSTALGIA_API inline float getAspectRatio() const
+    {
+        return static_cast<float>(m_windowWidth) / static_cast<float>(m_windowHeight);
+    }
+
 private:
     void tryInitializeGLFW();
 

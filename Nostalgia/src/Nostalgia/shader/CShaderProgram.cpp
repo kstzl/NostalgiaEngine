@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 #include "Nostalgia/shader/CShaderProgram.hpp"
 
 namespace nostalgia
@@ -33,6 +35,15 @@ CShaderProgram::CShaderProgram(const std::string& fragmentShaderPath, const std:
 
     glDeleteShader(m_fragmentShader);
     glDeleteShader(m_vertexShader);
+}
+
+void CShaderProgram::setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
+{
+    GLuint viewLoc = glGetUniformLocation(m_shaderProgram, "view");
+    GLuint projLoc = glGetUniformLocation(m_shaderProgram, "projection");
+
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &viewMatrix[0][0]);
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projectionMatrix[0][0]);
 }
 
 }

@@ -3,6 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include "Nostalgia/core/core.hpp"
 #include "Nostalgia/core/types.hpp"
@@ -25,6 +26,8 @@ public:
     {
         glUseProgram(m_shaderProgram);
     }
+
+    NOSTALGIA_API void setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const;
 
 private:
     UShaderId m_fragmentShader;
