@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Nostalgia/core/core.hpp"
+#include "Nostalgia/CTransform.hpp"
 
 namespace nostalgia
 {
@@ -11,7 +12,7 @@ namespace nostalgia
 class CCamera
 {
 public:
-    NOSTALGIA_API CCamera(const glm::vec3& position, float fov, float aspectRatio, float nearClip, float farClip);
+    NOSTALGIA_API CCamera(const CTransform& initialTransform, float fov, float aspectRatio, float nearClip, float farClip);
 
     NOSTALGIA_API inline const glm::mat4& getViewMatrix() const
     {
@@ -23,20 +24,24 @@ public:
         return m_projectionMatrix;
     }
 
-private:
-    void updateViewMatrix()
+    NOSTALGIA_API inline CTransform& retrieveTransform()
     {
-        m_viewMatrix = glm::lookAt(m_position, m_position + m_direction, m_up);
+        return m_transform;
     }
 
+    NOSTALGIA_API inline void updateViewMatrix()
+    {
+        m_viewMatrix = glm::lookAt(m_transform.getPosition(), m_transform.getPosition() + m_transform.getForwardDirection(),
+                                   m_transform.getUpDirection());
+    }
+
+private:
     void updateProjectionMatrix()
     {
         m_projectionMatrix = glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearClip, m_farClip);
     }
 
-    glm::vec3 m_position;
-    glm::vec3 m_direction = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    CTransform m_transform = {};
 
     float m_fov;
     float m_aspectRatio;

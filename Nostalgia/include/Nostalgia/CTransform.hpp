@@ -11,13 +11,33 @@ namespace nostalgia
 class CTransform
 {
 public:
-    NOSTALGIA_API inline glm::mat4 getModelMatrix() const
-    {
-        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_position);
-        glm::mat4 rotationMatrix = glm::mat4_cast(m_rotation);
-        glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), m_scale);
+    NOSTALGIA_API CTransform() = default;
 
-        return translationMatrix * rotationMatrix * scaleMatrix;
+    NOSTALGIA_API explicit CTransform(const glm::vec3& initialPosition)
+        : m_position(initialPosition)
+    {
+    }
+
+    NOSTALGIA_API glm::mat4 getModelMatrix() const;
+
+    NOSTALGIA_API inline const glm::vec3& getPosition() const
+    {
+        return m_position;
+    }
+
+    NOSTALGIA_API inline glm::vec3 getForwardDirection() const
+    {
+        return m_rotation * glm::vec3(0.0f, 0.0f, -1.0f);
+    }
+
+    NOSTALGIA_API inline glm::vec3 getUpDirection() const
+    {
+        return m_rotation * glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+
+    NOSTALGIA_API inline glm::vec3 getRightDirection() const
+    {
+        return m_rotation * glm::vec3(1.0f, 0.0f, 0.0f);
     }
 
     NOSTALGIA_API inline void setPosition(const glm::vec3& newPosition)
@@ -35,10 +55,43 @@ public:
         m_rotation = newRotationQuat;
     }
 
+    NOSTALGIA_API inline float getPitch() const
+    {
+        return m_pitch;
+    }
+
+    NOSTALGIA_API inline float getYaw() const
+    {
+        return m_yaw;
+    }
+
+    NOSTALGIA_API inline void setPitch(float newPitch)
+    {
+        m_pitch = newPitch;
+        updateRotation();
+    }
+
+    NOSTALGIA_API inline void setYaw(float newYaw)
+    {
+        m_yaw = newYaw;
+        updateRotation();
+    }
+
 private:
-    glm::vec3 m_position;
-    glm::vec3 m_scale;
-    glm::quat m_rotation;
+    void updateRotation()
+    {
+        glm::quat rotationYaw = glm::angleAxis(glm::radians(m_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::quat rotationPitch = glm::angleAxis(glm::radians(m_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        m_rotation = rotationYaw * rotationPitch;
+    }
+
+    glm::vec3 m_position = {0.0f, 0.0f, 0.0f};
+    glm::vec3 m_scale = {1.0f, 1.0f, 1.0f};
+    glm::quat m_rotation = {glm::quat(1.0f, 0.0f, 0.0f, 0.0f)};
+
+    float m_pitch = 0.0;
+    float m_yaw = 0.0f;
 };
 
 }

@@ -27,7 +27,7 @@ public:
         glUseProgram(m_shaderProgram);
     }
 
-    NOSTALGIA_API void setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const;
+    NOSTALGIA_API void setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const;
 
 private:
     UShaderId m_fragmentShader;

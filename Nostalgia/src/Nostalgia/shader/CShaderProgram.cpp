@@ -37,13 +37,15 @@ CShaderProgram::CShaderProgram(const std::string& fragmentShaderPath, const std:
     glDeleteShader(m_vertexShader);
 }
 
-void CShaderProgram::setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
+void CShaderProgram::setMVP(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::mat4& modelMatrix) const
 {
     GLuint viewLoc = glGetUniformLocation(m_shaderProgram, "view");
     GLuint projLoc = glGetUniformLocation(m_shaderProgram, "projection");
+    GLuint modelLoc = glGetUniformLocation(m_shaderProgram, "model");
 
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &viewMatrix[0][0]);
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projectionMatrix[0][0]);
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &modelMatrix[0][0]);
 }
 
 }

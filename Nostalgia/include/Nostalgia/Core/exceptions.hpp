@@ -4,15 +4,15 @@
 #include <string>
 #include <iostream>
 
-#include "Nostalgia/Core/core.hpp"
+#include "Nostalgia/core/core.hpp"
 
 namespace nostalgia::exceptions
 {
 
-class EngineException : public std::exception
+class CEngineException : public std::exception
 {
 public:
-    explicit EngineException(const std::string& message)
+    explicit CEngineException(const std::string& message)
         : m_message(message)
     {
     }
